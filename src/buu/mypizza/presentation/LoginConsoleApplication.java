@@ -113,6 +113,7 @@ public void readCommands(){
         case ("logout"):
             SecurityService secServ = SecurityService.newInstance();
             secServ.signOutUser();
+            //Some changes
             CommandsForConsoleApplication cfca = new CommandsForConsoleApplication();
             cfca.readingCommand();
             break;
