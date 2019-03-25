@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 public class ProductDAO implements DAO<Product>{
 
     @Override
-    public Optional get(long id) {
+    public Optional<Product> get(long id) {
         try(Connection conn = Db.getConnection()){
             PreparedStatement statement = conn.prepareStatement("SELECT * FROM products WHERE id = ?");
             statement.setLong(1, id);
