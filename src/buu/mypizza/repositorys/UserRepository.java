@@ -1,6 +1,7 @@
 package buu.mypizza.repositorys;
 
 import buu.mypizza.dao.DAO;
+import buu.mypizza.dao.UserDAO;
 import buu.mypizza.exceptions.ModelNullFieldException;
 import buu.mypizza.exceptions.UserDublicateException;
 import buu.mypizza.models.User;
@@ -18,6 +19,10 @@ public class UserRepository extends Repository<User>{
         this.dao = dao;
     }
 
+    public UserRepository() {
+        this.dao = new UserDAO();
+    }
+    
     @Override
     public void add(User user) throws UserDublicateException, ModelNullFieldException{
         if(isExist(user)){
