@@ -1,11 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package buu.mypizza.presentation;
-
-import buu.mypizza.models.User;
+import buu.mypizza.models.Admin;
+import buu.mypizza.presentation.OrderConsoleApplication;
+import buu.mypizza.services.SecurityService;
 import java.util.Scanner;
 
 /**
@@ -13,34 +8,46 @@ import java.util.Scanner;
  * @author Kseniia
  */
 public class CommandsForConsoleApplication {
-    Scanner input = new Scanner(System.in);
+    private static CommandsForConsoleApplication cmd;
+    private CommandsForConsoleApplication(){}
+    public static CommandsForConsoleApplication getCommandsForConsoleApplication(){
+        if(cmd == null){	
+            cmd = new CommandsForConsoleApplication();	
+        }
+        return cmd;	
+    }
+    
+    
+        
+    private Scanner input = new Scanner(System.in);
     private String header ="<MYPIZZA>";
     private String space ="         "; //для красоты
     private String command;
     
-    //вывод приветсвия для старта программы
+    
     public void welcome(){
-        System.out.println(header+"Welcome to MYPIZZA \n"
-                +space+ "For Help input \'-h\'"); 
-        System.out.println(space+"If you are registered enter 'login'"); 
-        System.out.println(space+"Otherwise register, enter 'reg'");
-        readingCommand();
+            System.out.println(header+"Welcome to MYPIZZA \n"
+                    +space+ "For Help input \'-h\'"); 
+            System.out.println(space+"If you are registered enter 'login'"); 
+            System.out.println(space+"Otherwise register, enter 'reg'");
+            readingCommand();
     }
 
     public String getHeader() {
         return header;
     }
-
-    //измемнение хедера, как хотел Назар + это можно получать из класса НАЗАРА ПОЛЬЗОВАТЕЛЬ.toString
-    public void setHeader(User user) { //******** я не помню как называется твой класс пользователя****************
-        this.header= user.toString();
+    
+    
+    public void setHeader(String s) {
+        this.header= s;
     }
     
     //чтение введенных команд
     public void readingCommand(){
         //String command = input.next();
+        SecurityService securityService;
         System.out.print(header);
-        switch (command = input.next()) {
+        switch (command = input.nextLine()) {
            case  ("reg"):
                RegistrationConsoleApplication rca = new RegistrationConsoleApplication();
                rca.start();
@@ -53,9 +60,36 @@ public class CommandsForConsoleApplication {
                System.exit(0);
                break;
            case ("-h"):
-               System.out.println(header+"'reg' - registration\n"+space+"'login' - login\n"+space+"'exit' - exit");
+               System.out.println(header+"'reg' - registration\n"+
+                       space+"'login' - login\n"+
+                       space+"'exit' - exit\n"+
+                       space+"'logout' - logout\n"+
+                       space+"'create order' - create order\n");
                readingCommand();
                break;
+            case ("logout"):
+                securityService = SecurityService.newInstance();
+                if(securityService.isLoggedUser()){ 
+                    SecurityService secServ = SecurityService.newInstance();
+                secServ.signOutUser();
+                setHeader("<MYPIZZA>");
+                //Some changes
+                }
+                else{
+                    System.out.println(header+"Sorry, you are not logged in.\nTry to enter again.");
+                    readingCommand();                 
+                }
+                break;
+            case ("create order"):
+                securityService = SecurityService.newInstance();
+                if(securityService.isLoggedUser()){
+                    forwardTo();
+                }
+                else{
+                    System.out.println(header+"Sorry, you are not logged in.\nTry to enter again.");
+                    readingCommand();
+                }
+                break;
            default:
                System.out.println(header+"Sorry, I don't know this ocommand.\nTry to enter again.");
                readingCommand();
@@ -64,7 +98,15 @@ public class CommandsForConsoleApplication {
         
     }
     
-    //реагирование на определенную команду
+     public void forwardTo() {
+        SecurityService securityService = SecurityService.newInstance(); 
+        if(securityService.getLoggedUser().getClass().equals(Admin.class)){ //!!!!!!!!!!! user == admin?????
+            AdministrationVlogConsoleApplication admin = new AdministrationVlogConsoleApplication(securityService.getLoggedUser());
+            admin.start();
+        }else{
+            OrderConsoleApplication oca = new OrderConsoleApplication(securityService.getLoggedUser()); // input user
+            oca.start();
+        }
+    }
+    } 
     
-    
-}

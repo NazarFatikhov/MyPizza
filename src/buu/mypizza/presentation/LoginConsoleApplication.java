@@ -1,10 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package buu.mypizza.presentation;
-
 
 import buu.mypizza.exceptions.IncorrectPasswordException;
 import buu.mypizza.exceptions.UserDublicateLoggedException;
@@ -54,10 +47,11 @@ public class LoginConsoleApplication implements  AuthorizationConsoleApplication
         // *************создание пользователя********************
         user = new Client(email, password);
         try {
-            SecurityService secServ = SecurityService.newInstance();
-            secServ.signInUser(user);
+           SecurityService secServ = SecurityService.newInstance();
+           secServ.signInUser(user);
             println("You have logined successfully!");
             setHeader(user.toString());
+            CommandsForConsoleApplication.getCommandsForConsoleApplication().setHeader(user.toString());
             println(beautiesFooter);
             readCommands();
         } catch (UserDublicateLoggedException ex) {
@@ -73,10 +67,8 @@ public class LoginConsoleApplication implements  AuthorizationConsoleApplication
          
     }
 
-    @Override
-    public void forwardTo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+   
+    
 
     @Override
     public void formFilling() {
@@ -85,11 +77,9 @@ public class LoginConsoleApplication implements  AuthorizationConsoleApplication
         if (isValidEmailAddress(email)) {
             print("Enter password:");
             password = input.next();
-
-            //**************проверка на наличие в БД****************
             createUser(email, password);
-
-        } else {
+        } 
+        else{
             println("This email does not exist");
             readCommands();
         }
@@ -97,39 +87,9 @@ public class LoginConsoleApplication implements  AuthorizationConsoleApplication
     
     @Override 
 public void readCommands(){ 
-    print(header);
-    String command; 
-    switch (command = input.next()) { 
-        case ("reg"): 
-            RegistrationConsoleApplication rca = new RegistrationConsoleApplication(); 
-            rca.start(); 
-        break; 
-        case ("login"): 
-            formFilling(); 
-        break; 
-        case ("exit"): 
-            System.exit(0); 
-        break; 
-        case ("logout"):
-            SecurityService secServ = SecurityService.newInstance();
-            secServ.signOutUser();
-            //Some changes
-            CommandsForConsoleApplication cfca = new CommandsForConsoleApplication();
-            cfca.readingCommand();
-            break;
-        case ("create order"):
-            OrderConsoleApplication oca = new OrderConsoleApplication(this.user);
-            oca.start();
-        case ("-h"): 
-            System.out.println(header+"'reg' - registration\n"+space+"'login' - login\n"+space+"'exit' - exit"); 
-            readCommands(); 
-        break; 
-        default: 
-            System.out.println(header+"Sorry, I don't know this ocommand.\nTry to enter again."); 
-            readCommands(); 
-        break; 
-    } 
+     CommandsForConsoleApplication.getCommandsForConsoleApplication().readingCommand();
 }
+    
     private void print(String s){
         System.out.print(s);
     }
@@ -138,3 +98,4 @@ public void readCommands(){
     }
       
 }
+   
