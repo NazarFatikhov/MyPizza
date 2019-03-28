@@ -1,14 +1,7 @@
 package buu.mypizza.models;
 
-import buu.mypizza.dao.DAO;
-import buu.mypizza.dao.UserDAO;
-import buu.mypizza.repositorys.UserRepository;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  *

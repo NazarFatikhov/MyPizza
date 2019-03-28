@@ -1,6 +1,7 @@
 package buu.mypizza.models;
 
 import buu.mypizza.exceptions.ModelNullFieldException;
+import buu.mypizza.exceptions.ProductDublicateException;
 import buu.mypizza.exceptions.UserDublicateException;
 import buu.mypizza.repositorys.ProductsRepository;
 import buu.mypizza.repositorys.Repository;
@@ -19,7 +20,7 @@ public class Admin extends User{
         super(fields);
     }
     
-    public void addProduct(Product product) throws UserDublicateException, ModelNullFieldException{
+    public void addProduct(Product product) throws UserDublicateException, ModelNullFieldException, ProductDublicateException{
         Repository repo = new ProductsRepository();
         repo.add(product);
     }
