@@ -23,6 +23,7 @@ import java.util.logging.Logger;
  * @author nazar
  */
 public class UserDAO implements DAO<UserDTO>{
+
     
     @Override
     public Optional<UserDTO> get(long id) {
@@ -44,7 +45,9 @@ public class UserDAO implements DAO<UserDTO>{
     @Override
     public List getAll() {
         List<UserDTO> users = new ArrayList<>();
-        try(Connection conn = Db.getConnection()){
+        Connection conn;
+        try{
+            conn = Db.getConnection();
             Statement state = conn.createStatement();
             ResultSet resultSet = state.executeQuery("SELECT * FROM users;");
             while (resultSet.next()) {

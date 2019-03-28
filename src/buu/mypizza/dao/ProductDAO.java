@@ -19,6 +19,9 @@ import java.util.logging.Logger;
  */
 public class ProductDAO implements DAO<ProductDTO>{
 
+    public ProductDAO() {
+    }
+
     @Override
     public Optional<ProductDTO> get(long id) {
         ProductDTO productDTO = null;
@@ -73,11 +76,11 @@ public class ProductDAO implements DAO<ProductDTO>{
     @Override
     public void update(ProductDTO product, String[] params) {
         try(Connection conn = Db.getConnection()){
-            PreparedStatement st = conn.prepareStatement("UPDATE products SET (name, price, balance) = (?, ?, ?) WHERE name = ?;");
+            PreparedStatement st = conn.prepareStatement("UPDATE products SET (name, price, balance) = (?, ?, ?) WHERE id = ?;");
             st.setString(1, params[0]);
             st.setDouble(2, Double.parseDouble(params[1]));
             st.setInt(3, Integer.parseInt(params[2]));
-            st.setString(4, product.getName());
+            st.setInt(4, product.getId());
             st.execute();
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
