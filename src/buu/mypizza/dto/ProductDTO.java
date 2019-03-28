@@ -19,6 +19,14 @@ public class ProductDTO {
     public ProductDTO() { 
     }
 
+    public ProductDTO(String name, double price, int balance) {
+        this.name = name;
+        this.price = price;
+        this.balance = balance;
+    }
+
+    
+    
     public ProductDTO(int id, String name, float price, int balance) {
         this.id = id;
         this.name = name;

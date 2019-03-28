@@ -18,6 +18,13 @@ public class UserDTO {
         this.is_admin = is_admin;
     }
 
+    public UserDTO(String email, String pass, boolean is_admin) {
+        this.email = email;
+        this.pass = pass;
+        this.is_admin = is_admin;
+    }
+    
+
     public UserDTO(String email, String pass){
         this.email = email;
         this.pass = pass;
@@ -38,7 +45,7 @@ public class UserDTO {
         return pass;
     }
 
-    public boolean isIs_admin() {
+    public boolean isAdmin() {
         return is_admin;
     }
 
