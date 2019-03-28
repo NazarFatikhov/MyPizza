@@ -10,7 +10,6 @@ import java.util.List;
 public class Order {
 
     
-    private long id;
     private User owner;
     private List<Product> products;
     private double price;
@@ -18,8 +17,7 @@ public class Order {
     private String address;
     private String comment;
 
-    public Order(long id, User owner, List<Product> products, double price, Date date, String address, String comment) {
-        this.id = id;
+    public Order(User owner, List<Product> products, double price, Date date, String address, String comment) {
         this.owner = owner;
         this.products = products;
         this.price = price;
@@ -80,18 +78,12 @@ public class Order {
         this.comment = comment;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     @Override
     public String toString() {
-        return "Order{" + "id=" + id + ", owner=" + owner + '}';
+        return "Order{" + "owner=" + owner + ", price=" + price + ", date=" + date + '}';
     }
+
+
     
     
     

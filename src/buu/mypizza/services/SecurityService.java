@@ -60,6 +60,36 @@ public class SecurityService {
         }
         return false;
     }
+    
+    public boolean isLoggedUser(){
+        return loggedUser != null;
+    }
+
+    public static SecurityService getInstance() {
+        return instance;
+    }
+
+    public UserRepository getRepo() {
+        return repo;
+    }
+
+    public User getLoggedUser() {
+        return loggedUser;
+    }
+
+    public static void setInstance(SecurityService instance) {
+        SecurityService.instance = instance;
+    }
+
+    public void setRepo(UserRepository repo) {
+        this.repo = repo;
+    }
+
+    public void setLoggedUser(User loggedUser) {
+        this.loggedUser = loggedUser;
+    }
+    
+    
 
     @Override
     public String toString() {

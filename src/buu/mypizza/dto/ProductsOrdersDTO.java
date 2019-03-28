@@ -11,6 +11,11 @@ public class ProductsOrdersDTO {
     private int orderId;
     private int productId;
 
+    public ProductsOrdersDTO(int orderId, int productId) {
+        this.orderId = orderId;
+        this.productId = productId;
+    }
+    
     public ProductsOrdersDTO(int id, int orderId, int productId) {
         this.id = id;
         this.orderId = orderId;
