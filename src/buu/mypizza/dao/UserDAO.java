@@ -5,10 +5,8 @@
  */
 package buu.mypizza.dao;
 
-import buu.mypizza.models.Admin;
-import buu.mypizza.models.Client;
-import buu.mypizza.models.User;
 import buu.mypizza.db.Db;
+import buu.mypizza.dto.UserDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,62 +22,49 @@ import java.util.logging.Logger;
  *
  * @author nazar
  */
-public class UserDAO implements DAO<User>{
+public class UserDAO implements DAO<UserDTO>{
     
     @Override
-    public Optional<User> get(long id) {
+    public Optional<UserDTO> get(long id) {
+        UserDTO user = null;
         try(Connection conn = Db.getConnection()){
             PreparedStatement statement = conn.prepareStatement("SELECT * FROM users WHERE id = ?");
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            String[] fields = {resultSet.getString("email"), 
-                    resultSet.getString("pass")};
-            User user = null;
-            if(resultSet.getBoolean("is_admin")){
-                user = new Admin(fields);
-            }else{
-                user = new Client(fields); 
+            while(resultSet.next()){
+                user = new UserDTO(resultSet.getInt("id"), resultSet.getString("email"), 
+                    resultSet.getString("pass"), resultSet.getBoolean("is_admin"));
             }
-            return Optional.ofNullable(user);
-        } catch (SQLException ex) {
+            } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return Optional.empty();
+        return Optional.ofNullable(user);
     }
 
     @Override
     public List getAll() {
-        try{
-            List<User> users = new ArrayList<>();
-            Connection conn = Db.getConnection();
+        List<UserDTO> users = new ArrayList<>();
+        try(Connection conn = Db.getConnection()){
             Statement state = conn.createStatement();
-            ResultSet resSet = state.executeQuery("SELECT * FROM users;");
-            while (resSet.next()) {
-                User user;
-                String[] fields = {resSet.getString("email"), 
-                    resSet.getString("pass")};
-                if(resSet.getBoolean("is_admin")){
-                    user = new Admin(fields);
-                }else{
-                    user = new Client(fields);
-                }
+            ResultSet resultSet = state.executeQuery("SELECT * FROM users;");
+            while (resultSet.next()) {
+                UserDTO user = new UserDTO(resultSet.getInt("id"), resultSet.getString("email"), 
+                            resultSet.getString("pass"), resultSet.getBoolean("is_admin"));
                 users.add(user);
             }
-            return users;
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return new ArrayList();
+        return users;
         
     }    
 
     @Override
-    public void save(User user) {
+    public void save(UserDTO user) {
         try(Connection conn = Db.getConnection()){
             PreparedStatement st = conn.prepareStatement("INSERT INTO users (email, pass) VALUES (?, ?);");
             st.setString(1, user.getEmail());
-            st.setString(2, user.getPassword());
+            st.setString(2, user.getPass());
             st.execute();
         }catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -87,12 +72,12 @@ public class UserDAO implements DAO<User>{
     }
 
     @Override
-    public void update(User user, String[] params) {
+    public void update(UserDTO user, String[] params) {
         try(Connection conn = Db.getConnection()){
-            PreparedStatement st = conn.prepareStatement("UPDATE users SET (email, pass) = (?, ?) WHERE email = ?;");
+            PreparedStatement st = conn.prepareStatement("UPDATE users SET (email, pass) = (?, ?) WHERE id = ?;");
             st.setString(1, params[0]);
             st.setString(2, params[1]);
-            st.setString(3, user.getEmail());
+            st.setInt(3, user.getId());
             st.execute();
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -100,10 +85,10 @@ public class UserDAO implements DAO<User>{
     }
 
     @Override
-    public void delete(User user) {
+    public void delete(UserDTO user) {
         try(Connection conn = Db.getConnection()){
-            PreparedStatement st = conn.prepareStatement("DELETE FROM users WHERE email = ?;");
-            st.setString(1, user.getEmail());
+            PreparedStatement st = conn.prepareStatement("DELETE FROM users WHERE id = ?;");
+            st.setInt(1, user.getId());
             st.execute();
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
