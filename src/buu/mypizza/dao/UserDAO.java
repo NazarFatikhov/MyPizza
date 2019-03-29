@@ -28,7 +28,9 @@ public class UserDAO implements DAO<UserDTO>{
     @Override
     public Optional<UserDTO> get(long id) {
         UserDTO user = null;
-        try(Connection conn = Db.getConnection()){
+        Connection conn;
+        try{
+            conn = Db.getConnection();
             PreparedStatement statement = conn.prepareStatement("SELECT * FROM users WHERE id = ?");
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -64,7 +66,9 @@ public class UserDAO implements DAO<UserDTO>{
 
     @Override
     public void save(UserDTO user) {
-        try(Connection conn = Db.getConnection()){
+        Connection conn;
+        try{
+            conn = Db.getConnection();
             PreparedStatement st = conn.prepareStatement("INSERT INTO users (email, pass) VALUES (?, ?);");
             st.setString(1, user.getEmail());
             st.setString(2, user.getPass());
@@ -76,7 +80,9 @@ public class UserDAO implements DAO<UserDTO>{
 
     @Override
     public void update(UserDTO user, String[] params) {
-        try(Connection conn = Db.getConnection()){
+        Connection conn;
+        try{
+            conn = Db.getConnection();
             PreparedStatement st = conn.prepareStatement("UPDATE users SET (email, pass) = (?, ?) WHERE id = ?;");
             st.setString(1, params[0]);
             st.setString(2, params[1]);
@@ -89,7 +95,9 @@ public class UserDAO implements DAO<UserDTO>{
 
     @Override
     public void delete(UserDTO user) {
-        try(Connection conn = Db.getConnection()){
+        Connection conn;
+        try{
+            conn = Db.getConnection();
             PreparedStatement st = conn.prepareStatement("DELETE FROM users WHERE id = ?;");
             st.setInt(1, user.getId());
             st.execute();

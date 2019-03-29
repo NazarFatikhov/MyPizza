@@ -24,7 +24,9 @@ public class OrderDAO implements DAO<OrderDTO>{
     @Override
     public Optional<OrderDTO> get(long id) {
         OrderDTO orderDTO = null;
-        try(Connection conn = Db.getConnection()) {
+        Connection conn;
+        try{
+            conn = Db.getConnection();
             PreparedStatement statement = conn.prepareStatement("SELECT * FROM orders WHERE id = ?");
             statement.setLong(1, id);
             ResultSet orderSet = statement.executeQuery();
@@ -45,7 +47,9 @@ public class OrderDAO implements DAO<OrderDTO>{
     @Override
     public List<OrderDTO> getAll() {
         List<OrderDTO> orders = new ArrayList<>();
-        try(Connection conn = Db.getConnection()){
+        Connection conn;
+        try{
+            conn = Db.getConnection();
             PreparedStatement statement = conn.prepareStatement("SELECT * FROM orders");
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
@@ -60,7 +64,9 @@ public class OrderDAO implements DAO<OrderDTO>{
 
     @Override
     public void save(OrderDTO order) {
-        try(Connection conn = Db.getConnection()){
+        Connection conn ;
+        try{
+            conn = Db.getConnection();
             PreparedStatement statement = conn.prepareStatement("INSERT INTO orders (user_id, price, date, address, comment) "
                     + "VALUES (?, ?, ?, ?, ?)");
             statement.setInt(1, order.getUserId());
@@ -76,7 +82,9 @@ public class OrderDAO implements DAO<OrderDTO>{
 
     @Override
     public void update(OrderDTO order, String[] params) {
-        try(Connection conn = Db.getConnection()){
+        Connection conn;
+        try{
+            conn = Db.getConnection();
             PreparedStatement statement = conn.prepareStatement("UPDATE orders SET (user_id, price, date, address, comment) = (?, ?, ?, ?, ?) "
                     + "WHERE id = ?;");
             statement.setInt(6, order.getId());
@@ -97,7 +105,9 @@ public class OrderDAO implements DAO<OrderDTO>{
 
     @Override
     public void delete(OrderDTO order) {
-        try(Connection conn = Db.getConnection()){
+        Connection conn ;
+        try{
+            conn = Db.getConnection();
             PreparedStatement statement = conn.prepareStatement("DELETE FROM orders WHERE id = ?");
             statement.setInt(1, order.getId());
             statement.execute();
