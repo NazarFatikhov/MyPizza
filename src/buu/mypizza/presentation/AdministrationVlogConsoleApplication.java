@@ -6,6 +6,7 @@ import buu.mypizza.models.Product;
 import buu.mypizza.models.User;
 import buu.mypizza.repositorys.ProductsRepository;
 import buu.mypizza.repositorys.Repository;
+import buu.mypizza.services.AdminActionService;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
@@ -40,11 +41,8 @@ public class AdministrationVlogConsoleApplication {
                     //noDone=false;
                 } else {
                     if (0 <= Integer.parseInt(id) && Integer.parseInt(id) < Products.values().length) {
-                        ProductsRepository rep = new ProductsRepository();
-                        Product product = rep.get(Products.values()[Integer.parseInt(id)].toString());
-                        String[] fields = {product.getName(), product.getPrice().toString(),
-                            "" + (product.getBalance() + Integer.parseInt(count))};
-                        rep.update(product, fields);
+                        AdminActionService service = new AdminActionService();
+                        service.addProductBalance(Products.values()[Integer.parseInt(id)].toString(), Integer.parseInt(count));
                         //************** db******************--->>>
                         //Products.values()[Integer.parseInt(id)].toString - название продукта
                         //Integer.parseInt(count) - количество, которое следует прибавить

@@ -50,11 +50,11 @@ public class LoginConsoleApplication implements  AuthorizationConsoleApplication
     @Override
     public void createUser(String email, String password) {
         // *************создание пользователя********************
-        UserRepository repo = new UserRepository();
-        user = repo.get(email);
+        SecurityService secServ = SecurityService.newInstance();
+        user = secServ.getUserByEmail(email);
         try {
-           SecurityService secServ = SecurityService.newInstance();
-           secServ.signInUser(user);
+            secServ = SecurityService.newInstance();
+            secServ.signInUser(user);
             println("You have logined successfully!");
             setHeader(user.toString());
             CommandsForConsoleApplication.getCommandsForConsoleApplication().setHeader(user.toString());

@@ -15,7 +15,7 @@ import buu.mypizza.exceptions.UserNotFoundException;
  */
 public class SecurityService {
     
-    private static SecurityService instance;
+    private static SecurityService instance = null;
     
     private UserRepository repo = new UserRepository(new UserDAO());
     
@@ -51,6 +51,10 @@ public class SecurityService {
     
     public void signOutUser(){
         this.loggedUser = null;
+    }
+    
+    public User getUserByEmail(String email){
+        return repo.get(email);
     }
     
     public boolean isCorrectPassword(User user){
