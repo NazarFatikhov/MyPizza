@@ -32,6 +32,7 @@ public class OrderDAO implements DAO<OrderDTO>{
             ResultSet orderSet = statement.executeQuery();
             while (orderSet.next()) {
                orderDTO = new OrderDTO(
+                    orderSet.getInt("id"),
                     orderSet.getInt("user_id"),
                     orderSet.getDouble("price"),
                     orderSet.getDate("date"),
@@ -53,7 +54,7 @@ public class OrderDAO implements DAO<OrderDTO>{
             PreparedStatement statement = conn.prepareStatement("SELECT * FROM orders");
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
-                orders.add(new OrderDTO(resultSet.getInt("user_id"), resultSet.getFloat("price"),
+                orders.add(new OrderDTO(resultSet.getInt("id"), resultSet.getInt("user_id"), resultSet.getFloat("price"),
                     resultSet.getDate("date"), resultSet.getString("address"), resultSet.getString("comment")));
             }
         } catch (SQLException ex) {

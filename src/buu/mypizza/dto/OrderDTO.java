@@ -18,7 +18,8 @@ public class OrderDTO {
     public OrderDTO() {
     }
 
-    public OrderDTO(int user_id, double price, Date date, String address, String comment) {
+    public OrderDTO(int id, int user_id, double price, Date date, String address, String comment) {
+        this.id = id;
         this.userId = user_id;
         this.price = price;
         this.date = date;
