@@ -6,6 +6,7 @@ import buu.mypizza.dto.UserDTO;
 import buu.mypizza.models.Order;
 import buu.mypizza.models.Product;
 import buu.mypizza.models.User;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,8 +21,17 @@ public class OrderMapper implements ThreeMapper<OrderDTO, List<ProductDTO>, User
         UserDTOMapper userMapper = new UserDTOMapper();
         List<Product> products = productMapper.mapList(productDTOs);
         User user = userMapper.map(userDTO);
-        Order order = new Order(user, products, orderDTO.getPrice(), orderDTO.getDate(), orderDTO.getAddress(), orderDTO.getComment());
+        Order order = new Order(orderDTO.getId(), user, products, orderDTO.getPrice(), orderDTO.getDate(), orderDTO.getAddress(), orderDTO.getComment());
         return order;
+    }
+
+    @Override
+    public List<Order> mapList(List<OrderDTO> orderDtos, List<ProductDTO> productDtos, UserDTO user) {
+        List<Order> orders = new ArrayList<>();
+        for (OrderDTO orderDto : orderDtos){
+            orders.add(map(orderDto, productDtos, user));
+        }
+        return orders;
     }
     
     
