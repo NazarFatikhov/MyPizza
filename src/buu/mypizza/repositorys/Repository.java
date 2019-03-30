@@ -7,44 +7,19 @@ import buu.mypizza.exceptions.ProductDublicateException;
 import buu.mypizza.exceptions.UserDublicateException;
 import java.util.List;
 
-public abstract class Repository<T> {
+public interface Repository<T> {
     
-    private DAO<T> dao;
     
-    public void add(T t) throws UserDublicateException, ModelNullFieldException, ProductDublicateException{
-        if (isExist(t)){
-             throw new ProductDublicateException();
-        }
-        else{
-            dao.save(t);
-        }
-    }
+    T getByStringKey(String key);
     
-    public boolean isExist(T t){
-        List<T> tes;
-        tes = dao.getAll();
-        for (T tt: tes){
-            if(tt.equals(t)){
-                return true;
-            }
-        }
-        return false;
-    }
+    void add(T t);
     
-    public List<T> getAll() throws DBException{
-        List<T> tes = dao.getAll();
-        if(tes.isEmpty()){
-            throw new DBException();
-        }
-        return tes;
-    }
+    boolean isExist(T t);
     
-    public void update(T t, String[] fields){
-        dao.update(t, fields);
-    }
+    List<T> getAll();
     
-    public void delete(T t){
-        dao.delete(t);
-    }
+    void update(T t, String[] fields);
+    
+    void delete(T t);
     
 }

@@ -12,7 +12,7 @@ public class AdminActionService {
 
     public void addProductBalance(String productName, int add){
         Repository repo = new ProductsRepository();
-        Product product = (Product) repo.get(productName);
+        Product product = (Product) repo.getByStringKey(productName);
         int endingPrice = product.getBalance() + add;
         String[] fiedls = {product.getName(), "" + product.getPrice(), "" + endingPrice}; 
         repo.update(product, fiedls);

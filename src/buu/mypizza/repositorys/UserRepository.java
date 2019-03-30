@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author nazar
  */
-public class UserRepository extends Repository<User>{
+public class UserRepository implements Repository<User>{
     
     DAO<UserDTO> dao;
     private Mapper userMapper = new UserMapper();
@@ -30,19 +30,11 @@ public class UserRepository extends Repository<User>{
     }
     
     @Override
-    public void add(User user) throws UserDublicateException, ModelNullFieldException{
-        if(isExist(user)){
-            throw new UserDublicateException();
-        }
-        else if(user.getEmail() == null || user.getPassword() == null){
-            throw new ModelNullFieldException();
-        }
-        else{
-            dao.save((UserDTO) userMapper.map(user));
-        }
+    public void add(User user){
+        dao.save((UserDTO) userMapper.map(user));
     }
     
-    public User get(String email){
+    public User getByStringKey(String email){
         List<User> users = userDTOMapper.mapList(dao.getAll());
         for(User u : users){
             if(u.getEmail().equals(email)){
@@ -62,6 +54,21 @@ public class UserRepository extends Repository<User>{
             }
         }
         return false;
+    }
+
+    @Override
+    public List<User> getAll() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void update(User t, String[] fields) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void delete(User t) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

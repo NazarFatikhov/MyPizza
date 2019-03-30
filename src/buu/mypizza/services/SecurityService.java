@@ -8,6 +8,7 @@ import buu.mypizza.repositorys.UserRepository;
 import buu.mypizza.exceptions.UserDublicateLoggedException;
 import buu.mypizza.exceptions.IncorrectPasswordException;
 import buu.mypizza.exceptions.UserNotFoundException;
+import buu.mypizza.repositorys.Repository;
 
 /**
  *
@@ -17,7 +18,7 @@ public class SecurityService {
     
     private static SecurityService instance = null;
     
-    private UserRepository repo = new UserRepository(new UserDAO());
+    private Repository<User> repo = new UserRepository(new UserDAO());
     
     private User loggedUser = null;
     
@@ -29,7 +30,15 @@ public class SecurityService {
     }
     
     public void signUpUser(User user) throws UserDublicateException, ModelNullFieldException {
-        repo.add(user);
+        if(repo.isExist(user)){
+            throw new UserDublicateException();
+        }
+        else if(user.getEmail() == null || user.getPassword() == null){
+            throw new ModelNullFieldException();
+        }
+        else{
+            repo.add(user);
+        }
     }
     
     public void signInUser(User user) throws UserDublicateLoggedException, IncorrectPasswordException, UserNotFoundException{
@@ -54,11 +63,11 @@ public class SecurityService {
     }
     
     public User getUserByEmail(String email){
-        return repo.get(email);
+        return repo.getByStringKey(email);
     }
     
     public boolean isCorrectPassword(User user){
-        User realUser = repo.get(user.getEmail());
+        User realUser = repo.getByStringKey(user.getEmail());
         if(realUser.getPassword().equals(user.getPassword())){
             return true;
         }
@@ -73,7 +82,7 @@ public class SecurityService {
         return instance;
     }
 
-    public UserRepository getRepo() {
+    public Repository getRepo() {
         return repo;
     }
 
