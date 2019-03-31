@@ -1,6 +1,7 @@
 package buu.mypizza.presentation;
 
 import buu.mypizza.models.Client;
+import buu.mypizza.services.OrderActionService;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
@@ -119,9 +120,10 @@ public class OrderConsoleApplication {
                     //noDone=false;
                 } else {
                     if (0 <= Integer.parseInt(id) && Integer.parseInt(id) < Filling.values().length) {
-                        //************** по id ·извлекать из бд цену и добалять к исходной цене******************--->>>
+                        OrderActionService serv = new OrderActionService();
+                        double price = serv.getPriceForProduct(Filling.values()[Integer.parseInt(id)].toString());
                         order.getFilling().put(Filling.values()[Integer.parseInt(id)].toString(), Integer.parseInt(count));
-                        priceChange(1);// доделать!!!!
+                        priceChange((int) price * Integer.parseInt(count));// доделать!!!!
                     } else {
                         println("Sorry, I don't know this Filling.\nTry to enter again.");
 
@@ -156,6 +158,7 @@ public class OrderConsoleApplication {
                CommandsForConsoleApplication.getCommandsForConsoleApplication().readingCommand();
                break;
            case ("y"):
+               
                fillingInFields();
                break;
            case ("n"):
@@ -177,8 +180,12 @@ public class OrderConsoleApplication {
         getHouseNumber();
         getApartment();
         input.nextLine();
-        getComment();    
-        println("Your order is issued");      
+        getComment();
+        println("Your order is issued");
+        OrderActionService serv = new OrderActionService();
+        String address = ""; //TODO set address from order
+        int kef = 1;
+        serv.createOrder(user, order.getFilling(), address, order.getComment(), kef);//TODO set kef
         println(forBeautiesFooter);
         CommandsForConsoleApplication.getCommandsForConsoleApplication().readingCommand();
     }
