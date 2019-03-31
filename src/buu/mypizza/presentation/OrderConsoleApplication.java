@@ -184,8 +184,8 @@ public class OrderConsoleApplication {
         println("Your order is issued");
         OrderActionService serv = new OrderActionService();
         String address = ""; //TODO set address from order
-        int kef = 1;
-        serv.createOrder(user, order.getFilling(), address, order.getComment(), kef);//TODO set kef
+        int kef = 1;//TODO set kef
+        serv.createOrder(user, order.getFilling(), address, order.getComment(), kef);
         println(forBeautiesFooter);
         CommandsForConsoleApplication.getCommandsForConsoleApplication().readingCommand();
     }
