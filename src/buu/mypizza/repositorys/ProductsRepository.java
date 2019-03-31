@@ -88,5 +88,17 @@ public class ProductsRepository implements Repository<Product>{
     public void delete(Product t) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public int getIdByStringKey(String name) {
+        List<ProductDTO> productDtos = dao.getAll();
+        for(ProductDTO productDto : productDtos){
+            if(productDto.getName().equals(name)){
+                return productDto.getId();
+            }
+        }
+        return 0;
+    }
+    
     
 }

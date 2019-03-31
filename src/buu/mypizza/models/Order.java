@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class Order {
 
-    
+    private int ordeNum;
     private User owner;
     private List<Product> products;
     private double price;
@@ -18,6 +18,16 @@ public class Order {
     private String comment;
 
     public Order(User owner, List<Product> products, double price, Date date, String address, String comment) {
+        this.owner = owner;
+        this.products = products;
+        this.price = price;
+        this.date = date;
+        this.address = address;
+        this.comment = comment;
+    }
+    
+    public Order(int orderNum, User owner, List<Product> products, double price, Date date, String address, String comment) {
+        this.ordeNum = orderNum;
         this.owner = owner;
         this.products = products;
         this.price = price;
@@ -52,6 +62,14 @@ public class Order {
 
     public String getComment() {
         return comment;
+    }
+
+    public int getOrdeNum() {
+        return ordeNum;
+    }
+
+    public void setOrdeNum(int ordeNum) {
+        this.ordeNum = ordeNum;
     }
 
     public void setOwner(User owner) {

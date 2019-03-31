@@ -9,13 +9,18 @@ import buu.mypizza.dto.OrderDTO;
 import buu.mypizza.dto.ProductDTO;
 import buu.mypizza.dto.ProductsOrdersDTO;
 import buu.mypizza.dto.UserDTO;
-import buu.mypizza.exceptions.DBException;
+import buu.mypizza.models.User;
 import buu.mypizza.mappers.Mapper;
+import buu.mypizza.mappers.BiMapper;
 import buu.mypizza.mappers.OrderMapper;
+import buu.mypizza.mappers.OrderDTOMapper;
 import buu.mypizza.mappers.ProductDTOMapper;
 import buu.mypizza.mappers.ThreeMapper;
+import buu.mypizza.mappers.ProductMapper;
 import buu.mypizza.models.Order;
+import buu.mypizza.models.Product;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,7 +29,7 @@ import java.util.List;
  */
 public class OrderRepository implements Repository<Order>{
 
-    DAO orderDao;
+    DAO<OrderDTO> orderDao;
 
     public OrderRepository() {
         this.orderDao = new OrderDAO();
@@ -45,7 +50,7 @@ public class OrderRepository implements Repository<Order>{
         return false;
     }
     
-    private Order getOrder(OrderDTO orderDto) throws DBException{
+    private Order getOrder(OrderDTO orderDto){
         DAO poDao = new ProductsOrdersDAO();
         DAO pDao = new ProductDAO();
         DAO uDao = new UserDAO();
@@ -72,14 +77,45 @@ public class OrderRepository implements Repository<Order>{
         }
     }
 
+    private int getLastOrderNum(){
+        List<OrderDTO> orderDtos = orderDao.getAll();
+        List<Integer> ids = new ArrayList<>();
+        for(OrderDTO orderDto: orderDtos){
+            ids.add(orderDto.getId());
+        }
+        int maxId = Collections.max(ids);
+        return maxId;
+    }
+    
     @Override
-    public Order getByStringKey(String key) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Order getByStringKey(String orderNum) {
+        Order order = null;
+        int ordNum = Integer.parseInt(orderNum);
+        List<OrderDTO> orders = orderDao.getAll();
+        ThreeMapper mapper = new OrderMapper();
+        for(OrderDTO orderDto : orders){
+            if(orderDto.getId() == ordNum){
+                order = getOrder(orderDto);
+                break;
+            }
+        }
+        return order;
     }
 
     @Override
-    public void add(Order t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void add(Order order) {
+        order.setOrdeNum(getLastOrderNum() + 1);
+        Repository userRep = new UserRepository();
+        Repository productRepo = new ProductsRepository();
+        DAO productsOrdersDao = new ProductsOrdersDAO();
+        BiMapper orderMapper = new OrderDTOMapper();
+        int userId = userRep.getIdByStringKey(order.getOwner().getEmail());
+        OrderDTO orderDto = (OrderDTO) orderMapper.map(order, userId);
+        orderDao.save(orderDto);
+        for (Product product : order.getProducts()) {
+            ProductsOrdersDTO poDto = new ProductsOrdersDTO(order.getOrdeNum(), productRepo.getIdByStringKey(product.getName()));
+            productsOrdersDao.save(poDto);
+        }
     }
 
     @Override
@@ -96,7 +132,11 @@ public class OrderRepository implements Repository<Order>{
     public void delete(Order t) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
+    @Override
+    public int getIdByStringKey(String orderNum) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     
 }

@@ -22,4 +22,6 @@ public interface Repository<T> {
     
     void delete(T t);
     
+    int getIdByStringKey(String key);
+    
 }

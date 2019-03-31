@@ -71,4 +71,13 @@ public class UserRepository implements Repository<User>{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    public int getIdByStringKey(String email){
+        List<UserDTO> usersDto = dao.getAll();
+        for(UserDTO userDto : usersDto){
+            if(userDto.getEmail().equals(email)){
+                return userDto.getId();
+            }
+        }
+        return 0;
+    }
 }
