@@ -13,7 +13,7 @@ public class UserNotFoundException extends Exception{
 
     @Override
     public String getMessage() {
-        return "User with this email is nit found";
+        return "User with this email is not found";
     }
     
     

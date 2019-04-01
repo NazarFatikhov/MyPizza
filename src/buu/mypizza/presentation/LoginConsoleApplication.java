@@ -3,16 +3,12 @@ package buu.mypizza.presentation;
 import buu.mypizza.exceptions.UserDublicateLoggedException;
 import buu.mypizza.exceptions.IncorrectPasswordException;
 import buu.mypizza.exceptions.UserNotFoundException;
-import buu.mypizza.models.User;
 import buu.mypizza.models.Client;
-import buu.mypizza.repositorys.Repository;
-import buu.mypizza.repositorys.UserRepository;
+import buu.mypizza.models.User;
 import buu.mypizza.services.SecurityService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -50,11 +46,11 @@ public class LoginConsoleApplication implements  AuthorizationConsoleApplication
     @Override
     public void createUser(String email, String password) {
         // *************создание пользователя********************
+        user = new Client(email, password);
         SecurityService secServ = SecurityService.newInstance();
-        user = secServ.getUserByEmail(email);
         try {
             secServ = SecurityService.newInstance();
-            secServ.signInUser(user);
+            secServ.signInUser(email, password);
             println("You have logined successfully!");
             setHeader(user.toString());
             CommandsForConsoleApplication.getCommandsForConsoleApplication().setHeader(user.toString());

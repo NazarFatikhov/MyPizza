@@ -87,9 +87,9 @@ public class RegistrationConsoleApplication implements  AuthorizationConsoleAppl
         user = new Client(email, password);
         SecurityService secService = SecurityService.newInstance();
         try {
-            secService.signUpUser(user);
+            secService.signUpUser(email, password);
             println("You have registered successfully!");
-            secService.signInUser(user);
+            secService.signInUser(email, password);
             setHeader(user.toString());
             CommandsForConsoleApplication.getCommandsForConsoleApplication().setHeader(user.toString());
             CommandsForConsoleApplication.getCommandsForConsoleApplication().readingCommand();

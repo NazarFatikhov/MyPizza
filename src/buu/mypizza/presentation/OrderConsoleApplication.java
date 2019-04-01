@@ -65,8 +65,10 @@ public class OrderConsoleApplication {
             
             if(0<=id && id<Dough.values().length){
                 order.setDough(Dough.values()[id].toString());
-                //************** по id ·извлекать из бд цену и добалять к исходной цене******************--->>>
-                priceChange(1);//***********
+                OrderActionService serv = new OrderActionService();
+                double price = serv.getPriceForProduct("Dough");
+                order.getFilling().put("Dough", id + 1);
+                priceChange((int) (price * (id + 1)));//***********
                 println(forBeautiesFooter);
             }else{
                 println("Sorry, I don't know this Dough.\nTry to enter again.");
@@ -88,8 +90,10 @@ public class OrderConsoleApplication {
             int id = input.nextInt();
             if(0<=id && id<Sauce.values().length){
                 order.setSauce(Sauce.values()[id].toString());
-                //************** по id ·извлекать из бд цену и добалять к исходной цене******************--->>>
-                priceChange(1);//***********
+                OrderActionService serv = new OrderActionService();
+                double price = serv.getPriceForProduct(Sauce.values()[id].toString());
+                order.getFilling().put(Sauce.values()[id].toString(), 1);
+                priceChange((int) price);//***********
                 println(forBeautiesFooter);
             }else{
                 println("Sorry, I don't know this Sauce.\nTry to enter again.");
@@ -183,9 +187,8 @@ public class OrderConsoleApplication {
         getComment();
         println("Your order is issued");
         OrderActionService serv = new OrderActionService();
-        String address = ""; //TODO set address from order
-        int kef = 1;//TODO set kef
-        serv.createOrder(user, order.getFilling(), address, order.getComment(), kef);
+        String address = order.getCity() + " " + order.getHouseNumber() + " " + order.getApartment(); //TODO set address from order
+        serv.createOrder(user.getEmail(), order.getFilling(), address, order.getComment());
         println(forBeautiesFooter);
         CommandsForConsoleApplication.getCommandsForConsoleApplication().readingCommand();
     }
