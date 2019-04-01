@@ -29,8 +29,9 @@ public class SecurityService {
         return instance;
     }
     
-    public void signUpUser(User user) throws UserDublicateException, ModelNullFieldException {
-        if(repo.isExist(user)){
+    public void signUpUser(String email, String password) throws UserDublicateException, ModelNullFieldException {
+        User user = repo.getByStringKey(email);
+        if(user == null){
             throw new UserDublicateException();
         }
         else if(user.getEmail() == null || user.getPassword() == null){
@@ -41,12 +42,13 @@ public class SecurityService {
         }
     }
     
-    public void signInUser(User user) throws UserDublicateLoggedException, IncorrectPasswordException, UserNotFoundException{
+    public void signInUser(String email, String password) throws UserDublicateLoggedException, IncorrectPasswordException, UserNotFoundException{
+        User user = repo.getByStringKey(email);
         if(loggedUser != null){
             throw new UserDublicateLoggedException();
         }
-        else if(repo.isExist(user)){
-            if(isCorrectPassword(user)){
+        else if(user != null){
+            if(isCorrectPassword(email, password)){
                 loggedUser = user;
             }
             else{
@@ -62,13 +64,19 @@ public class SecurityService {
         this.loggedUser = null;
     }
     
-    public User getUserByEmail(String email){
-        return repo.getByStringKey(email);
+    public User getUserByEmail(String email) throws UserNotFoundException{
+        User user = repo.getByStringKey(email);
+        if(user == null){
+            throw new UserNotFoundException();
+        }
+        else{
+            return user;
+        }
     }
     
-    public boolean isCorrectPassword(User user){
-        User realUser = repo.getByStringKey(user.getEmail());
-        if(realUser.getPassword().equals(user.getPassword())){
+    public boolean isCorrectPassword(String email, String password){
+        User realUser = repo.getByStringKey(email);
+        if(realUser.getPassword().equals(password)){
             return true;
         }
         return false;
